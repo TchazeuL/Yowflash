@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "549979713939",
+    "project_id": "yowflash-2ef9c",
+    "storage_bucket": "yowflash-2ef9c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:549979713939:android:329b1955da7a4fa1e23866",
+        "android_client_info": {
+          "package_name": "com.example.yowflash"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "549979713939-eqr3a7su5msttrvg27vvekpjtvcldf25.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbabQUC5UgNuqjRdgeok3U2pbDTc6hO-c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "549979713939-eqr3a7su5msttrvg27vvekpjtvcldf25.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "549979713939-r4dovhsus82pgm9ha3eud0eq7crbouen.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.yowflash"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
