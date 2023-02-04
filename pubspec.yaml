@@ -54,6 +54,7 @@ dependencies:
   hash: ^1.0.4
   async: ^2.10.0
   intl: ^0.17.0
+  url_launcher: ^6.1.8
 
 flutter_native_splash:
   color: "#FFFFFF"

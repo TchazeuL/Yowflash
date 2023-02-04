@@ -1,4 +1,5 @@
 import "package:adaptive_theme/adaptive_theme.dart";
+import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:yowflash/database/database.dart";
@@ -13,7 +14,8 @@ class SettingScreen extends StatefulWidget {
 class _SettingScreen extends State<SettingScreen> {
   final dbHelper = DbHelper();
   Future<String?>? username;
-
+  CollectionReference db =
+      FirebaseFirestore.instance.collection("utilisateurs");
   final users = FirebaseAuth.instance.currentUser;
   @override
   Widget build(BuildContext context) {
@@ -43,7 +45,7 @@ class _SettingScreen extends State<SettingScreen> {
                 case 0:
                   return Column(children: [
                     const SizedBox(
-                      height: 70.0,
+                      height: 60.0,
                     ),
                     const CircleAvatar(
                         radius: 45.0,
@@ -57,21 +59,11 @@ class _SettingScreen extends State<SettingScreen> {
                           ),
                         )),
                     const SizedBox(
-                      width: 10.0,
+                      width: 15.0,
                     ),
-                    FutureBuilder(
-                        future: dbHelper.asyncInit(),
-                        builder: (context, snapshot) {
-                          if (snapshot.hasData) {
-                            return Text("${snapshot.data}");
-                          }
-                          if (snapshot.data == null) {
-                            return const Text("Non connecte");
-                          }
-                          return const CircularProgressIndicator(
-                            color: Colors.blue,
-                          );
-                        }),
+                    users == null
+                        ? const Text("Pas de connexion")
+                        : Text("${users?.email}"),
                     const SizedBox(
                       height: 20.0,
                     ),
@@ -128,20 +120,19 @@ class _SettingScreen extends State<SettingScreen> {
                           }
                         });
                       },
-                      child: Row(
-                        children: const [
-                          Icon(Icons.dark_mode,
-                              color: Color.fromARGB(255, 255, 255, 255)),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                            "Theme",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                      child: const ListTile(
+                        leading: Icon(Icons.dark_mode,
+                            color: Color.fromARGB(255, 255, 255, 255)),
+                        title: Text(
+                          "Theme",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                        ),
                       ));
                 case 3:
                   return const Divider();
@@ -151,20 +142,19 @@ class _SettingScreen extends State<SettingScreen> {
                         ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(content: Text("Compte")));
                       },
-                      child: Row(
-                        children: const [
-                          Icon(Icons.key,
-                              color: Color.fromARGB(255, 255, 255, 255)),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                            "Compte",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                      child: const ListTile(
+                        leading: Icon(Icons.language,
+                            color: Color.fromARGB(255, 255, 255, 255)),
+                        title: Text(
+                          "Langue",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                        ),
                       ));
                 case 5:
                   return const Divider();
@@ -172,22 +162,21 @@ class _SettingScreen extends State<SettingScreen> {
                   return OutlinedButton(
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Aide")));
+                            const SnackBar(content: Text("Compte")));
                       },
-                      child: Row(
-                        children: const [
-                          Icon(Icons.help_outlined,
-                              color: Color.fromARGB(255, 255, 255, 255)),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                            "Aide",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                      child: const ListTile(
+                        leading: Icon(Icons.key,
+                            color: Color.fromARGB(255, 255, 255, 255)),
+                        title: Text(
+                          "Compte",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                        ),
                       ));
                 case 7:
                   return const Divider();
@@ -195,22 +184,21 @@ class _SettingScreen extends State<SettingScreen> {
                   return OutlinedButton(
                       onPressed: () {
                         ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text("Langue")));
+                            const SnackBar(content: Text("Aide")));
                       },
-                      child: Row(
-                        children: const [
-                          Icon(Icons.language,
-                              color: Color.fromARGB(255, 255, 255, 255)),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                            "Langue",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                      child: const ListTile(
+                        leading: Icon(Icons.help,
+                            color: Color.fromARGB(255, 255, 255, 255)),
+                        title: Text(
+                          "Aide",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                        ),
                       ));
                 case 9:
                   return const Divider();
@@ -221,20 +209,19 @@ class _SettingScreen extends State<SettingScreen> {
                             const SnackBar(
                                 content: Text("Signaler un probleme")));
                       },
-                      child: Row(
-                        children: const [
-                          Icon(Icons.warning,
-                              color: Color.fromARGB(255, 255, 255, 255)),
-                          SizedBox(
-                            width: 10.0,
-                          ),
-                          Text(
-                            "Signaler un probleme",
-                            style: TextStyle(
-                                color: Color.fromARGB(255, 255, 255, 255),
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+                      child: const ListTile(
+                        leading: Icon(Icons.warning,
+                            color: Color.fromARGB(255, 255, 255, 255)),
+                        title: Text(
+                          "Signaler un probleme",
+                          style: TextStyle(
+                              color: Color.fromARGB(255, 255, 255, 255),
+                              fontWeight: FontWeight.bold),
+                        ),
+                        trailing: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                        ),
                       ));
                 default:
                   return null;

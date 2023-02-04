@@ -3,15 +3,15 @@ import "package:cloud_firestore/cloud_firestore.dart";
 import "package:firebase_auth/firebase_auth.dart";
 import "package:flutter/material.dart";
 import "package:flutter_slidable/flutter_slidable.dart";
-import "package:intl/intl.dart";
 import "package:yowflash/database/database.dart";
 import "package:yowflash/model/products.dart";
+import "package:yowflash/screen/Flasher/components/form_screen.dart";
+import "package:yowflash/screen/Flasher/components/update_screeen.dart";
+import "package:yowflash/screen/Flasher/form_update_screen.dart";
 import "package:yowflash/widget/const.dart";
 
 class ListFlash extends StatefulWidget {
-  const ListFlash({
-    super.key,
-  });
+  const ListFlash({super.key});
 
   @override
   State<StatefulWidget> createState() => _ListFlash();
@@ -44,6 +44,62 @@ class _ListFlash extends State<ListFlash> {
     }
   }
 
+  String? date(int i) {
+    if (DateTime.now()
+            .difference(DateTime.fromMillisecondsSinceEpoch(i))
+            .inDays ==
+        0) {
+      if (DateTime.now()
+              .difference(DateTime.fromMillisecondsSinceEpoch(i))
+              .inSeconds ==
+          0) {
+        return "Aujourd'hui, A l'instant";
+      } else if (DateTime.now()
+              .difference(DateTime.fromMillisecondsSinceEpoch(i))
+              .inSeconds <
+          60) {
+        return "Aujourd'hui, il y'a ${DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(i)).inSeconds} secondes ";
+      } else if (DateTime.now()
+                  .difference(DateTime.fromMillisecondsSinceEpoch(i))
+                  .inSeconds >=
+              60 &&
+          DateTime.now()
+                  .difference(DateTime.fromMillisecondsSinceEpoch(i))
+                  .inSeconds <
+              3600) {
+        return "Aujourd'hui,il y'a ${DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(i)).inMinutes} minutes";
+      } else if (DateTime.now()
+                  .difference(DateTime.fromMillisecondsSinceEpoch(i))
+                  .inSeconds >=
+              3600 &&
+          DateTime.now()
+                  .difference(DateTime.fromMillisecondsSinceEpoch(i))
+                  .inSeconds <
+              86400) {
+        return "Aujourd'hui,il y'a ${DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(i)).inHours} heure(s)";
+      }
+    } else if (DateTime.now()
+            .difference(DateTime.fromMillisecondsSinceEpoch(i))
+            .inSeconds ==
+        1) {
+      DateTime d = DateTime.fromMillisecondsSinceEpoch(i).toLocal();
+      var time = TimeOfDay(hour: d.hour, minute: d.minute);
+      return "Hier a ${time.hour}:${time.minute.toString().padLeft(2, '0')}";
+    } else if (DateTime.now()
+                .difference(DateTime.fromMillisecondsSinceEpoch(i))
+                .inDays >
+            1 &&
+        DateTime.now()
+                .difference(DateTime.fromMillisecondsSinceEpoch(i))
+                .inDays <
+            30) {
+      return "Il y'a ${DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(i)).inDays} jours";
+    } else {
+      return "Il y'a ${DateTime.now().difference(DateTime.fromMillisecondsSinceEpoch(i)).inDays ~/ 30} mois";
+    }
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     CollectionReference db = FirebaseFirestore.instance.collection("Produits");
@@ -63,14 +119,25 @@ class _ListFlash extends State<ListFlash> {
                 )
               ];
               for (int i = 0; i < snapshot.data!.size; i++) {
-                var element = doc[i].data() as Map;
-                var data = element;
+                var element = doc[i].data();
+                var data = element as Map;
                 slides.add(Slidable(
                     endActionPane:
                         ActionPane(motion: const DrawerMotion(), children: [
                       SlidableAction(
                         onPressed: (context) {
-                          // db.doc(user?.uid).update(data);
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => Update(
+                                        docId: doc[i].id,
+                                        time:
+                                            DateTime.fromMillisecondsSinceEpoch(
+                                                data["date"]),
+                                        prix: data["prix"],
+                                        description: data["description"],
+                                        name: data["name"],
+                                      )));
                         },
                         flex: 2,
                         backgroundColor:
@@ -111,7 +178,10 @@ class _ListFlash extends State<ListFlash> {
                                         ),
                                       ]))).then((value) {
                             if (value == "oui") {
-                              db.doc(user?.uid).delete();
+                              db
+                                  .doc(doc[i].id)
+                                  .delete()
+                                  .then((value) => slides.remove(slides[i]));
                             }
                           });
                         },
@@ -151,7 +221,7 @@ class _ListFlash extends State<ListFlash> {
                                       style: const TextStyle(fontSize: 18.0),
                                     ),
                                     Text(
-                                      "Cree le ${DateFormat.yMMMd().format(DateTime.fromMillisecondsSinceEpoch(data["date"]))}",
+                                      "${date((data["create"]))}",
                                       textAlign: TextAlign.start,
                                     )
                                   ]),
@@ -182,20 +252,10 @@ class _ListFlash extends State<ListFlash> {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if (snapshot.data!.size < 1 || !snapshot.hasData) {
+          } else if ((snapshot.data!.size == 0 || !snapshot.hasData) &&
+              snapshot.connectionState != ConnectionState.done) {
             return const Center(
               child: Text("Aucune publication"),
-              // OutlinedButton(
-              //     style: ElevatedButton.styleFrom(
-              //         foregroundColor: Colors.white,
-              //         fixedSize: const Size(100, 60)),
-              //     onPressed: () {
-              //       // Navigator.pushReplacement(
-              //       //     context,
-              //       //     MaterialPageRoute(
-              //       //         builder: (context) => build(context)));
-              //     },
-              //     child: const Text("Actualiser"))
             );
           } else if (user == null) {
             return const Center(

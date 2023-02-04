@@ -71,7 +71,7 @@ class Authentication {
           email: user.email, password: user.password);
       return true;
     } on FirebaseAuthException catch (e) {
-      errorMessage(e);
+      debugPrint(e.toString());
       return false;
     }
   }

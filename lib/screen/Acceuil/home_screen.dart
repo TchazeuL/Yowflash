@@ -14,21 +14,14 @@ class HomeScreen extends StatelessWidget {
         Padding(padding: EdgeInsets.all(25.0)),
         SizedBox(width: 350.0, child: FormSearch()),
         SizedBox(
-          height: 50.0,
+          height: 30.0,
+        ),
+        Text(
+          "Produits a la une",
+          style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
         ),
         SizedBox(
-          width: 350,
-          child: ListProducts(),
-        ),
-        SizedBox(
-          height: 5.0,
-        ),
-        SizedBox(
-          width: 350,
-          child: ListProducts(),
-        ),
-        SizedBox(
-          height: 5.0,
+          height: 10.0,
         ),
         SizedBox(
           width: 350,

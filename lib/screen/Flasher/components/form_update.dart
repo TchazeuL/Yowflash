@@ -11,24 +11,28 @@ import "package:yowflash/widget/const.dart";
 import "package:yowflash/widget/functions.dart";
 import "package:intl/intl.dart";
 
-class FormFlasher extends StatefulWidget {
-  FormFlasher({super.key, required this.phone});
-  final String phone;
-  bool? upDate;
+class FormUpdate extends StatefulWidget {
+  const FormUpdate({
+    super.key,
+    required this.docId,
+    required this.time,
+    required this.name,
+    required this.prix,
+    required this.description,
+  });
+  final String docId, name, prix, description;
+  final DateTime time;
   @override
-  State<StatefulWidget> createState() => _FormFlasher();
+  State<StatefulWidget> createState() => _FormUpdate();
 }
 
-class _FormFlasher extends State<FormFlasher> {
-  TextEditingController produit = TextEditingController();
-  TextEditingController prix = TextEditingController();
-  TextEditingController description = TextEditingController();
+class _FormUpdate extends State<FormUpdate> {
   DateTime date = DateTime(2023);
   File? _imageFile;
   final _picker = ImagePicker();
   final formkey = GlobalKey<FormState>();
   User? users = FirebaseAuth.instance.currentUser;
-
+  String? name, description, price;
   dynamic savedTheme;
   bool darkmode = false;
 
@@ -71,16 +75,16 @@ class _FormFlasher extends State<FormFlasher> {
     "Refrigerateur"
   ];
 
-  Future<void> sendProducts() async {
+  Future<void> updateProducts() async {
     final Map<String, dynamic> produits = {
       "uid": users?.uid,
-      "name": produit.text,
+      "name": name,
       "categorie": categorie,
       "date": date.millisecondsSinceEpoch,
-      "prix": prix.text,
+      "prix": price,
       "email": users?.email,
       "create": DateTime.now().millisecondsSinceEpoch,
-      "description": description.text
+      "description": description
     };
     if (formkey.currentState!.validate()) {
       formkey.currentState!.save();
@@ -91,17 +95,16 @@ class _FormFlasher extends State<FormFlasher> {
       CollectionReference post =
           FirebaseFirestore.instance.collection("Publications");
 
-      post.add({
+      post.doc(widget.docId).update({
         "categorie": produits["categorie"],
         "name": produits["name"],
         "prix": produits["prix"],
         "description": produits["description"],
         "date": produits["date"],
-        "phone": "+237${widget.phone}",
         "email": produits["email"],
         "uid": produits["uid"]
       });
-      db.add({
+      db.doc(widget.docId).update({
         "categorie": produits["categorie"],
         "name": produits["name"],
         "prix": produits["prix"],
@@ -148,11 +151,6 @@ class _FormFlasher extends State<FormFlasher> {
 
   @override
   Widget build(BuildContext context) {
-    // if (widget.upDate == true) {
-    //   produit.text = widget.name!;
-    //   prix.text = widget.prix!;
-    //   description.text = widget.description!;
-    // }
     Widget select() {
       if (date.month < DateTime.now().month ||
           date.compareTo(DateTime.now()) < 0) {
@@ -272,14 +270,15 @@ class _FormFlasher extends State<FormFlasher> {
                       alignment: AlignmentDirectional.center),
                   const SizedBox(height: 18.0),
                   TextFormField(
-                    controller: produit,
+                    initialValue: widget.name,
                     textCapitalization: TextCapitalization.words,
                     keyboardType: TextInputType.name,
+                    onSaved: ((val) => name = val!),
                     cursorColor:
                         darkmode == true ? kPrimaryColor : kPrimaryLightColor,
                     enabled: true,
                     onChanged: (value) {
-                      if (value.isNotEmpty || produit.text.isNotEmpty) {
+                      if (value.isNotEmpty || name!.isNotEmpty) {
                         setState(() => nameValid = true);
                       }
                     },
@@ -301,9 +300,10 @@ class _FormFlasher extends State<FormFlasher> {
                   ),
                   const SizedBox(height: 18.0),
                   TextFormField(
-                    controller: prix,
+                    initialValue: widget.prix,
                     textCapitalization: TextCapitalization.words,
                     keyboardType: TextInputType.number,
+                    onSaved: ((val) => price = val!),
                     cursorColor:
                         darkmode == true ? kPrimaryColor : kPrimaryLightColor,
                     enabled: true,
@@ -338,9 +338,9 @@ class _FormFlasher extends State<FormFlasher> {
                         firstDate: DateTime(2023),
                         lastDate: DateTime(3000),
                       ).then((value) {
-                        if (value != null ||
-                            value!.compareTo(DateTime.now()) < 0) {
-                          setState(() => date = value);
+                        value = widget.time;
+                        if (value.compareTo(DateTime.now()) < 0) {
+                          setState(() => date = value!);
                         }
                       });
                     },
@@ -348,14 +348,15 @@ class _FormFlasher extends State<FormFlasher> {
                   ),
                   const SizedBox(height: 10.0),
                   TextFormField(
-                    controller: description,
+                    initialValue: widget.description,
                     textCapitalization: TextCapitalization.words,
                     keyboardType: TextInputType.multiline,
+                    onSaved: ((val) => description = val!),
                     cursorColor:
                         darkmode == true ? kPrimaryColor : kPrimaryLightColor,
                     enabled: true,
                     onChanged: (value) {
-                      if (value.isNotEmpty || description.text.isNotEmpty) {
+                      if (value.isNotEmpty || description!.isNotEmpty) {
                         setState(() => descValid = true);
                       }
                     },
@@ -381,14 +382,14 @@ class _FormFlasher extends State<FormFlasher> {
                   SizedBox(
                       width: 50.0,
                       child: ElevatedButton(
-                        onPressed: (produit.text.isEmpty ||
-                                prix.text.isEmpty ||
-                                description.text.isEmpty ||
+                        onPressed: (name!.isEmpty ||
+                                prix.isEmpty ||
+                                description!.isEmpty ||
                                 categorie!.isEmpty ||
                                 date.day.isNaN ||
                                 loading == true)
                             ? null
-                            : sendProducts,
+                            : updateProducts,
                         child: loading
                             ? const CircularProgressIndicator(
                                 backgroundColor:

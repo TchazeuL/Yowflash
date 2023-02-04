@@ -8,9 +8,9 @@ class Introscreen extends StatelessWidget {
   final List<PageViewModel> pages = [
     PageViewModel(
       title: "Nous vivons dans un monde en constante pollution",
-      body: "Les objets inutilises participent a plus de 40% de la pollution",
+      body: "Les objets inutilises participent a plus de 20% de la pollution",
       image: Center(
-        child: Image.asset("assets/Firebse.png"),
+        child: Image.asset("assets/pollution.jpg"),
       ),
       decoration: const PageDecoration(
         titleTextStyle: TextStyle(
@@ -22,7 +22,7 @@ class Introscreen extends StatelessWidget {
       body:
           "Favoriser la reutilisation de vos anciens objets tout en les disposant au public et ainsi vous faire remunere en contrepartie",
       image: Center(
-        child: Image.asset("assets/Firebse.png"),
+        child: Image.asset("assets/Gain.png"),
       ),
       decoration: const PageDecoration(
         titleTextStyle: TextStyle(
@@ -34,7 +34,7 @@ class Introscreen extends StatelessWidget {
       body:
           "Visualiser les publications de la communaute afin de vous approvisionner en produits manquant et peu couteux",
       image: Center(
-        child: Image.asset("assets/Firebse.png"),
+        child: Image.asset("assets/Objets.png"),
       ),
       decoration: const PageDecoration(
         titleTextStyle: TextStyle(

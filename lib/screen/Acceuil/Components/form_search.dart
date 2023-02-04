@@ -9,9 +9,6 @@ class FormSearch extends StatefulWidget {
 
 class _FormSearch extends State<FormSearch> {
   final TextEditingController search = TextEditingController();
-  void display() {
-    debugPrint("Recherche effectue");
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -30,7 +27,7 @@ class _FormSearch extends State<FormSearch> {
         filled: true,
         suffixIcon: IconButton(
           icon: const Icon(Icons.search),
-          onPressed: display,
+          onPressed: () {},
         ),
         label: const Text("Que recherchez vous ?"),
         hintText: "Entrer le nom du produit",

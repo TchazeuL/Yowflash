@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
-import 'package:yowflash/screen/Flasher/components/form_flash.dart';
+import 'package:yowflash/screen/Flasher/components/form_update.dart';
 
-class FormFlasherScreen extends StatelessWidget {
-  const FormFlasherScreen({
-    super.key,
-    required this.phone,
-  });
-  final String phone;
-
+class FormUpdateScreen extends StatelessWidget {
+  const FormUpdateScreen(
+      {super.key,
+      required this.docId,
+      this.prix,
+      this.time,
+      this.description,
+      this.name});
+  final String? prix, name, description;
+  final DateTime? time;
+  final String docId;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,7 +26,7 @@ class FormFlasherScreen extends StatelessWidget {
             ),
           ),
           title: const Text(
-            "Publication",
+            "Modification",
             style: TextStyle(fontWeight: FontWeight.bold),
             textAlign: TextAlign.center,
           ),
@@ -41,8 +45,12 @@ class FormFlasherScreen extends StatelessWidget {
                     );
 
                   default:
-                    return FormFlasher(
-                      phone: phone,
+                    return FormUpdate(
+                      docId: docId,
+                      time: time!,
+                      prix: prix!,
+                      name: name!,
+                      description: description!,
                     );
                 }
               },

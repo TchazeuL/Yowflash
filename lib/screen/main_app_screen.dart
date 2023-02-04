@@ -5,13 +5,15 @@ import 'package:yowflash/screen/Acceuil/home_screen.dart';
 import 'package:yowflash/screen/Authentification/Login/login_screen.dart';
 import 'package:yowflash/screen/Categories/categories_screen.dart';
 import 'package:yowflash/screen/Flash/flash_screen.dart';
-import 'package:yowflash/screen/Flasher/components/button_add.dart';
-import 'package:yowflash/screen/Flasher/flasher_screen.dart';
+import 'package:yowflash/screen/Flashback/flashback_screen.dart';
+import 'package:yowflash/screen/Flasher/list_page.dart';
 import 'package:yowflash/screen/Setting/setting_screen.dart';
+import 'package:yowflash/screen/notifications/notifications_screen.dart';
 
 class BottomMenu extends StatefulWidget {
-  const BottomMenu({super.key});
+  const BottomMenu({super.key, this.flashScreen});
 
+  final bool? flashScreen;
   List<String> get title =>
       ["Categories", "Flash", "Acceuil", "Flasher", "FlashBack"];
 
@@ -29,74 +31,56 @@ class _BottomMenuState extends State<BottomMenu> {
   Widget build(BuildContext context) {
     final kTabPages = <Widget>[
       const Scaffold(body: ListCategories()),
-      Scaffold(body: PostFlashScreen()),
-      const Center(child: HomeScreen()),
-      Scaffold(
-          body: SingleChildScrollView(
-              child: Center(
-                  child: Column(
-            children: const [ListFlash()],
-          ))),
-          floatingActionButton: FloatingActionButton(
-            onPressed: () {
-              if (user != null) {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (context) => const FlasherScreen()));
-              } else {
-                showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                          title: const Text("Vous n'etes pas connecte"),
-                          content: const Text(
-                              "Connecte vous a votre compte avant de publier un produit"),
-                          actions: [
-                            TextButton(
-                                onPressed: () =>
-                                    Navigator.pop(context, "Cancel"),
-                                child: const Text("Cancel",
-                                    style: TextStyle(
-                                        color:
-                                            Color.fromARGB(255, 4, 112, 185)))),
-                            TextButton(
-                                onPressed: () => Navigator.pop(context, "Ok"),
-                                child: const Text("Ok",
-                                    style: TextStyle(
-                                        color:
-                                            Color.fromARGB(255, 4, 112, 185)))),
-                          ],
-                        )).then((value) {
-                  if (value == "Ok") {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) {
-                      return const LoginScreen();
-                    }));
-                  }
-                });
-              }
-            },
-            elevation: 10.0,
-            child: const Icon(
-              Icons.add,
-              color: Colors.white,
-              size: 30.0,
-            ),
-          )),
-      Center(
-          child: SingleChildScrollView(
-              child: Text(user == null ? "Flashback" : users!.uid)))
+      const Scaffold(body: PostFlashScreen()),
+      const HomeScreen(),
+      const ListPage(),
+      const Center(child: FlashbackScreen())
     ];
     final kBottomMenuItems = <BottomNavigationBarItem>[
       const BottomNavigationBarItem(
-          icon: Icon(Icons.category), label: "Categories"),
+          activeIcon: Icon(
+            Icons.category,
+            size: 30.0,
+          ),
+          icon: Icon(
+            Icons.category_outlined,
+            size: 30.0,
+          ),
+          label: "Categories"),
       const BottomNavigationBarItem(
-          icon: Icon(Icons.data_saver_off), label: "Flash"),
-      const BottomNavigationBarItem(icon: Icon(Icons.home), label: "Acceuil"),
+          activeIcon: Icon(
+            Icons.data_saver_off,
+            size: 30.0,
+          ),
+          icon: Icon(
+            Icons.data_saver_off_outlined,
+            size: 30.0,
+          ),
+          label: "Flash"),
       const BottomNavigationBarItem(
-          icon: Icon(Icons.add_to_photos), label: "Flasher"),
+          activeIcon: Icon(
+            Icons.home_sharp,
+            size: 30.0,
+          ),
+          icon: Icon(
+            Icons.home_outlined,
+            size: 30.0,
+          ),
+          label: "Acceuil"),
       const BottomNavigationBarItem(
-          icon: Icon(Icons.history), label: "Flashback")
+          activeIcon: Icon(
+            Icons.add_to_photos,
+            size: 30.0,
+          ),
+          icon: Icon(
+            Icons.add_to_photos_outlined,
+            size: 30.0,
+          ),
+          label: "Flasher"),
+      const BottomNavigationBarItem(
+          activeIcon: Icon(Icons.send),
+          icon: Icon(Icons.send_outlined),
+          label: "Flashback")
     ];
     assert(kTabPages.length == kBottomMenuItems.length);
     final bottomMenu = BottomNavigationBar(
@@ -173,6 +157,11 @@ class _BottomMenuState extends State<BottomMenu> {
                         context,
                         MaterialPageRoute(
                             builder: (context) => const SettingScreen()));
+                  } else {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const ListNotification()));
                   }
                 }
               },

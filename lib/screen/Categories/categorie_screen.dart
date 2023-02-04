@@ -4,22 +4,33 @@ import "package:flutter/material.dart";
 import "package:yowflash/screen/Flash/consult_screen.dart";
 import "package:yowflash/widget/const_image.dart";
 
-class PostFlashScreen extends StatelessWidget {
-  const PostFlashScreen({super.key, this.categorie, this.isSame});
-  final String? categorie;
-  final bool? isSame;
+class Categorie extends StatelessWidget {
+  const Categorie({super.key, required this.categorie});
+  final String categorie;
   @override
   Widget build(BuildContext context) {
+    final user = FirebaseAuth.instance.currentUser;
     CollectionReference db =
         FirebaseFirestore.instance.collection("Publications");
-
-    final user = FirebaseAuth.instance.currentUser;
-    return FutureBuilder<QuerySnapshot>(
-        future: user == null
-            ? db.get()
-            : isSame == true
-                ? db.where("categorie", isEqualTo: categorie).get()
-                : db.where("uid", isNotEqualTo: user.uid).get(),
+    return Scaffold(
+      appBar: AppBar(
+        leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              size: 30.0,
+            ),
+          ),
+          title:  Text(
+            categorie,
+            style: const TextStyle(fontWeight: FontWeight.bold),
+            textAlign: TextAlign.center,
+          ),
+      ),
+      body: Padding(padding: const EdgeInsets.symmetric(horizontal: 16.0) , child: FutureBuilder<QuerySnapshot>(
+        future: db.where("uid", isNotEqualTo: user?.uid).where("categorie", isEqualTo: categorie).get(),
         builder: (context, snapshot) {
           var connection = snapshot.connectionState;
           if (snapshot.hasData && snapshot.data!.size >= 1) {
@@ -200,6 +211,6 @@ class PostFlashScreen extends StatelessWidget {
           return const Center(
             child: Text("Probleme de connexion"),
           );
-        });
+        })));
   }
 }

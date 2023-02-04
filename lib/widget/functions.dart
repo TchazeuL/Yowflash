@@ -7,7 +7,7 @@ error(String? msg) {
       toastLength: Toast.LENGTH_SHORT,
       gravity: ToastGravity.BOTTOM,
       timeInSecForIosWeb: 3,
-      backgroundColor: const Color.fromARGB(255, 245, 53, 40),
+      backgroundColor: const Color.fromARGB(255, 195, 89, 77),
       textColor: Colors.white,
       webBgColor: "linear-gradient(to right, #FF1C1C, #FF1C1C)",
       webPosition: "center",

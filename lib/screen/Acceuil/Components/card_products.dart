@@ -1,10 +1,21 @@
 import 'package:adaptive_theme/adaptive_theme.dart';
 import "package:flutter/material.dart";
+import 'package:url_launcher/url_launcher.dart';
 import 'package:yowflash/widget/const.dart';
 
 class CardProducts extends StatefulWidget {
-  const CardProducts({super.key});
-
+  const CardProducts(
+      {super.key,
+      required this.categorie,
+      required this.name,
+      required this.prix,
+      required this.time,
+      required this.description,
+      required this.phone,
+      this.email});
+  final String categorie, prix, name, description;
+  final String? email, phone;
+  final int? time;
   @override
   State<StatefulWidget> createState() => _CardProducts();
 }
@@ -32,8 +43,19 @@ class _CardProducts extends State<CardProducts> {
     }
   }
 
+  Future<void> _launch(Uri uri) async {
+    if (!await launchUrl(uri)) {
+      throw Exception("Lancement impossible");
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    Map<String, Uri> url = {
+      "call": Uri.parse("tel:${widget.phone}"),
+      "sms": Uri.parse("sms:${widget.phone}"),
+      "mail": Uri.parse("mailto:${widget.email}")
+    };
     return Card(
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10.0))),
@@ -69,8 +91,8 @@ class _CardProducts extends State<CardProducts> {
                   const SizedBox(
                     height: 5.0,
                   ),
-                  const Text(
-                    "Telephone",
+                  Text(
+                    widget.categorie,
                   ),
                   const Divider(),
                   Text("Nom",
@@ -83,8 +105,8 @@ class _CardProducts extends State<CardProducts> {
                   const SizedBox(
                     height: 5.0,
                   ),
-                  const Text(
-                    "IPhone Xr",
+                  Text(
+                    widget.name,
                   ),
                   const Divider(),
                   Text("Prix",
@@ -97,8 +119,8 @@ class _CardProducts extends State<CardProducts> {
                   const SizedBox(
                     height: 5.0,
                   ),
-                  const Text(
-                    "160.000 XAF",
+                  Text(
+                    "${widget.prix} XAF",
                   ),
                   const Divider(),
                   Text("Temps restants",
@@ -111,7 +133,7 @@ class _CardProducts extends State<CardProducts> {
                   const SizedBox(
                     height: 5.0,
                   ),
-                  const Text("2 jours"),
+                  Text("${widget.time} jours"),
                   const Divider(),
                   Text("Description",
                       style: TextStyle(
@@ -123,8 +145,8 @@ class _CardProducts extends State<CardProducts> {
                   const SizedBox(
                     height: 5.0,
                   ),
-                  const Text(
-                    "Batterie 88% , capacite 128 Go, FaceID propre",
+                  Text(
+                    widget.description,
                   ),
                   const Divider(),
                   Text("Telephone vendeur",
@@ -137,7 +159,45 @@ class _CardProducts extends State<CardProducts> {
                   const SizedBox(
                     height: 5.0,
                   ),
-                  const Text("+237 690919555"),
+                  TextButton(
+                      onPressed: () {
+                        showDialog(
+                            context: context,
+                            builder: ((context) => SimpleDialog(
+                                  title: const Text(
+                                    "Choisir",
+                                    style: TextStyle(
+                                        color:
+                                            Color.fromARGB(255, 34, 156, 255)),
+                                  ),
+                                  children: [
+                                    ListTile(
+                                      leading: const Icon(Icons.phone,
+                                          color:
+                                              Color.fromARGB(255, 4, 112, 185)),
+                                      title: const Text("Appel"),
+                                      onTap: () =>
+                                          Navigator.pop(context, "call"),
+                                    ),
+                                    ListTile(
+                                      leading: const Icon(Icons.sms,
+                                          color:
+                                              Color.fromARGB(255, 4, 112, 185)),
+                                      title: const Text("Message"),
+                                      onTap: () =>
+                                          Navigator.pop(context, "sms"),
+                                    ),
+                                  ],
+                                ))).then((value) {
+                          if (value == "call") {
+                            _launch(url["call"]!);
+                          }
+                          if (value == "sms") {
+                            _launch(url["sms"]!);
+                          }
+                        });
+                      },
+                      child: Text("${widget.phone}")),
                   const Divider(),
                   Text("Adresse email",
                       style: TextStyle(
@@ -149,7 +209,9 @@ class _CardProducts extends State<CardProducts> {
                   const SizedBox(
                     height: 5.0,
                   ),
-                  const Text("loicmeyong17@gmail.com"),
+                  TextButton(
+                      onPressed: () => _launch(url["mail"]!),
+                      child: Text("${widget.email}")),
                 ])
               ])
         ]));

@@ -1,8 +1,8 @@
 import "package:flutter/material.dart";
-import "package:yowflash/screen/Acceuil/Components/card_products.dart";
+import "package:yowflash/screen/Flash/consult_products.dart";
 
-class ConsulterScreen extends StatelessWidget {
-  const ConsulterScreen(
+class ConsultScreen extends StatelessWidget {
+  const ConsultScreen(
       {super.key,
       required this.categorie,
       required this.name,
@@ -10,10 +10,12 @@ class ConsulterScreen extends StatelessWidget {
       required this.time,
       required this.description,
       required this.phone,
-      this.email});
-  final String categorie, prix, name, description;
-  final String? email, phone;
-  final int? time;
+      required this.email});
+
+  final String categorie, prix, name, description, phone;
+  final String? email;
+  final int time;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,14 +41,14 @@ class ConsulterScreen extends StatelessWidget {
               const Padding(padding: EdgeInsets.all(16.0)),
               SizedBox(
                   width: 350.0,
-                  child: CardProducts(
+                  child: ConsultProducts(
                     categorie: categorie,
                     name: name,
                     phone: phone,
                     email: email,
+                    description: description,
                     prix: prix,
                     time: time,
-                    description: description,
                   )),
             ],
           ),
