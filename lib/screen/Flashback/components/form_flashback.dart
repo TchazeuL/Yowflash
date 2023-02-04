@@ -92,6 +92,7 @@ class _FormFlashback extends State<FormFlashback> {
     return Form(
         key: formkey,
         child: Column(children: [
+          const SizedBox(height: 50.0),
           TextFormField(
             controller: message,
             keyboardType: TextInputType.text,

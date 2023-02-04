@@ -78,6 +78,10 @@ class MyApp extends StatelessWidget {
           )),
           cardColor: Colors.white,
           cardTheme: const CardTheme(elevation: 2.0, color: Colors.white),
+          listTileTheme: const ListTileThemeData(
+              iconColor: kPrimaryLightColor,
+              titleTextStyle: TextStyle(color: Colors.black),
+              subtitleTextStyle: TextStyle(color: Colors.black)),
           appBarTheme: const AppBarTheme(
               backgroundColor: kPrimaryLightColor,
               foregroundColor: Colors.white,
@@ -98,6 +102,12 @@ class MyApp extends StatelessWidget {
                     bodyColor: const Color.fromARGB(255, 211, 206, 206),
                   ),
             ),
+            listTileTheme: const ListTileThemeData(
+                iconColor: kPrimaryColor,
+                titleTextStyle:
+                    TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                subtitleTextStyle:
+                    TextStyle(color: Color.fromARGB(255, 255, 255, 255))),
             dropdownMenuTheme: const DropdownMenuThemeData(
                 menuStyle: MenuStyle(
                     backgroundColor:

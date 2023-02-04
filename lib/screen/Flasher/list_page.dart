@@ -11,11 +11,7 @@ class ListPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final user = FirebaseAuth.instance.currentUser;
     return Scaffold(
-        body: SingleChildScrollView(
-            child: Center(
-                child: Column(
-          children: const [ListFlash()],
-        ))),
+        body: const Center(child: ListFlash()),
         floatingActionButton: FloatingActionButton(
           onPressed: () {
             if (user != null) {

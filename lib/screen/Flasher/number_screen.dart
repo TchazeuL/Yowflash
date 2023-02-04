@@ -28,7 +28,7 @@ class NumberScreen extends StatelessWidget {
           shrinkWrap: true,
           itemCount: 1,
           itemBuilder: (context, index) => const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.0),
+              padding: EdgeInsets.symmetric(horizontal: 20.0),
               child: FormNumber()),
         )));
   }

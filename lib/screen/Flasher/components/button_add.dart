@@ -5,8 +5,6 @@ import "package:flutter/material.dart";
 import "package:flutter_slidable/flutter_slidable.dart";
 import "package:yowflash/database/database.dart";
 import "package:yowflash/model/products.dart";
-import "package:yowflash/screen/Flasher/components/form_screen.dart";
-import "package:yowflash/screen/Flasher/components/update_screeen.dart";
 import "package:yowflash/screen/Flasher/form_update_screen.dart";
 import "package:yowflash/widget/const.dart";
 
@@ -115,7 +113,7 @@ class _ListFlash extends State<ListFlash> {
             List<Widget> itemToSlide() {
               List<Widget> slides = [
                 const SizedBox(
-                  height: 10.0,
+                  height: 1.0,
                 )
               ];
               for (int i = 0; i < snapshot.data!.size; i++) {
@@ -226,14 +224,9 @@ class _ListFlash extends State<ListFlash> {
                                     )
                                   ]),
                             ]),
-                            const Divider()
                           ];
                           if (index % 3 == 0) {
                             return list[0];
-                          }
-
-                          if (index - 1 % 3 == 0) {
-                            return list[1];
                           }
 
                           return null;
@@ -243,25 +236,19 @@ class _ListFlash extends State<ListFlash> {
             }
 
             return Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: itemToSlide(),
+            );
+          } else if (snapshot.connectionState != ConnectionState.done &&
+              user == null) {
+            return const Center(
+              child: Text("Vous n'etes pas connecte a votre compte"),
             );
           } else if (snapshot.connectionState != ConnectionState.done) {
             return const Center(
               child: CircularProgressIndicator(),
             );
-          } else if ((snapshot.data!.size == 0 || !snapshot.hasData) &&
-              snapshot.connectionState != ConnectionState.done) {
-            return const Center(
-              child: Text("Aucune publication"),
-            );
-          } else if (user == null) {
-            return const Center(
-              child: Text("Vous n'etes pas connecte"),
-            );
           }
+
           return const Center(
             child: Text("Probleme de connexion"),
           );

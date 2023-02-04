@@ -89,7 +89,9 @@ class ListCategories extends StatelessWidget {
             categorie.length,
             (index) => Column(mainAxisSize: MainAxisSize.max, children: [
                   Center(
-                    child: buildCard(categorie[index]),
+                    child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                        child: buildCard(categorie[index])),
                   ),
                 ])));
   }
